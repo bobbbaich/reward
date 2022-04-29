@@ -7,5 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RewardDTO {
+    private String uuid;
     private String name;
 }
