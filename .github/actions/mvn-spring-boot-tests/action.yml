@@ -9,5 +9,5 @@ runs:
         distribution: 'zulu'
         java-version: '17'
         cache: 'maven'
-    - run: mvn test
+    - run: mvn clean test
       shell: bash
