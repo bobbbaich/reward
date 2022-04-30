@@ -26,7 +26,8 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/spring-boot-tests
 
   build-image:
     name: Build and Publish Image
@@ -34,7 +35,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
@@ -46,7 +47,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
