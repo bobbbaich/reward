@@ -38,6 +38,7 @@ runs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         mvn spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image has been build successfully"
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       shell: bash
