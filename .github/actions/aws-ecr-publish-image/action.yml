@@ -11,7 +11,7 @@ inputs:
 outputs:
   image:
     description: "Built image"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+    value: ${{ steps.build-image.outputs.image }}
 
 runs:
   using: "composite"
