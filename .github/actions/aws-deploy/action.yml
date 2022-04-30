@@ -19,4 +19,6 @@ runs:
         # Actions cannot access secrets so pass them in as inputs
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-        aws-region: eu-west-1
+        aws-region: ${{ env.AWS_REGION }}
+    - run: echo Hello ${{ env.AWS_REGION }}.
+      shell: bash
