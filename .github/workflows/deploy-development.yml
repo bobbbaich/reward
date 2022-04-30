@@ -23,14 +23,14 @@ permissions:
 jobs:
   run-tests:
     name: Tests
-    environment: ${{ env.ENVIRONMENT }}
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
   build-image:
     name: Build and Publish Image
-    environment: ${{ env.ENVIRONMENT }}
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
 
   deploy-production:
     name: Deploy
-    environment: ${{ env.ENVIRONMENT }}
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
