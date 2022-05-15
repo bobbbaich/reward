@@ -48,7 +48,7 @@ Parameters:
       access other AWS resources like S3 buckets, DynamoDB tables, etc
 
 Conditions:
-  HasCustomRole: !Not [ !Equals [!Ref 'Role', ''] ]
+  HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
 
 Resources:
   # A log group for storing the stdout logs from this service's containers
@@ -68,8 +68,8 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      ExecutionRoleArn:
-        Fn::ImportValue: !Sub ${EnvironmentName}:ECSTaskExecutionRole
+      ExecutionRoleArn: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ECSTaskExecutionRole'
       TaskRoleArn:
         Fn::If:
           - 'HasCustomRole'
@@ -97,8 +97,8 @@ Resources:
     DependsOn: LoadBalancerRule
     Properties:
       ServiceName: !Ref 'ServiceName'
-      Cluster:
-        Fn::ImportValue: !Sub ${EnvironmentName}:ClusterName
+      Cluster: !ImportValue
+        'Fn::Sub': ${EnvironmentName}:poc-cluster
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
@@ -107,11 +107,13 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
-          SecurityGroups:
-            - Fn::ImportValue: !Sub ${EnvironmentName}:ContainerSecurityGroup
+          SecurityGroups: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
           Subnets:
-            - Fn::ImportValue: !Sub ${EnvironmentName}:PrivateSubnetOne
-            - Fn::ImportValue: !Sub ${EnvironmentName}:PrivateSubnetTwo
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnetOne'
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnetTwo'
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
@@ -136,8 +138,8 @@ Resources:
       Port: !Ref 'ContainerPort'
       Protocol: HTTP
       UnhealthyThresholdCount: 2
-      VpcId:
-        Fn::ImportValue: !Sub ${EnvironmentName}:VpcId
+      VpcId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:VpcId'
 
   # Create a rule on the load balancer for routing traffic to the target group
   LoadBalancerRule:
@@ -148,7 +150,7 @@ Resources:
           Type: 'forward'
       Conditions:
         - Field: path-pattern
-          Values: [!Ref 'Path']
-      ListenerArn:
-        Fn::ImportValue: !Sub ${EnvironmentName}:PublicListener
+          Values: [ !Ref 'Path' ]
+      ListenerArn: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:PublicListener'
       Priority: !Ref 'Priority'
