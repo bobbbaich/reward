@@ -24,6 +24,5 @@ runs:
         name: ${{ env.ENVIRONMENT }}-poc-cluster
         template: stacks/ecs-service.yaml
         no-fail-on-empty-changeset: "1"
-        parameter-overrides: >-
-          EnvironmentName=${{ env.ENVIRONMENT }}
-          ImageUrl=${{ env.IMAGE_NAME }}
+          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }},ImageUrl=${{ jobs.build-image.env.IMAGE_NAME }}"
+#
