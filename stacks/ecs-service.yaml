@@ -98,7 +98,7 @@ Resources:
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster: !ImportValue
-        'Fn::Sub': ${EnvironmentName}:poc-cluster
+        'Fn::Sub': ${EnvironmentName}-poc-cluster
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
@@ -108,12 +108,12 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
+            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroupId'
           Subnets:
             - !ImportValue
-              'Fn::Sub': '${EnvironmentName}:PrivateSubnetOne'
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet1Id'
             - !ImportValue
-              'Fn::Sub': '${EnvironmentName}:PrivateSubnetTwo'
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet2Id'
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
