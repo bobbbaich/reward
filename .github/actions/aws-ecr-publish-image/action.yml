@@ -9,9 +9,9 @@ inputs:
     description: "The aws-secret-access-key used to authenticate with AWS"
 
 outputs:
-  image:
+  ecr-image:
     description: "Built image"
-    value: ${{ steps.build-image.outputs.image }}
+    value: ${{ steps.build-image.outputs.ecr-image }}
 
 runs:
   using: "composite"
@@ -39,5 +39,5 @@ runs:
       run: |
         mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "::set-output name=ecr-image::$(echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG")"
       shell: bash
