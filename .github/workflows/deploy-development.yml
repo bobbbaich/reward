@@ -46,4 +46,4 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          ecr-image: ${{ needs.build-image.outputs.ecr-image }}
+          ecr-image: ${{ steps.build-image.outputs.ecr-image }}
