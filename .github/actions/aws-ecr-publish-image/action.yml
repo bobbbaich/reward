@@ -37,7 +37,7 @@ runs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> ECR_IMAGE_URL 
+        ECR_IMAGE_URL="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_IMAGE_URL
         docker push $ECR_IMAGE_URL
         echo "::set-output name=ecr-image::$(echo $ECR_IMAGE_URL)"
