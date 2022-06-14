@@ -21,6 +21,12 @@ runs:
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: show inputs
+      id: show-inputs
+      run: |
+        echo "The ecr image is ${{ inputs.ecr-image }}"
+      shell: bash
+
     - id: deploy-ecs-service
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:

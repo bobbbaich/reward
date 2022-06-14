@@ -39,11 +39,11 @@ runs:
       run: |
         mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=ecr-image::$(echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG)"
+        echo '::set-output name=ecr-image::$(echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG)'
       shell: bash
 
     - name: show outputs
       id: show-outputs
       run: |
-        run: echo "The selected color is ${{ steps.build-image.outputs.ecr-image }}"
+        echo "The ecr image is ${{ steps.build-image.outputs.ecr-image }}"
       shell: bash
