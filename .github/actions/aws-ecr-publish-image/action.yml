@@ -41,3 +41,9 @@ runs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=ecr-image::$(echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG)"
       shell: bash
+
+    - name: show outputs
+      id: show-outputs
+      run: |
+        run: echo "The selected color is ${{ steps.build-image.outputs.ecr-image }}"
+      shell: bash
