@@ -41,7 +41,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     env:
-      ECR_REGISTRY: ${{ steps.build-image.outputs.ecr-image }}
+      ECR_REGISTRY: ${{ needs.build-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-deploy
