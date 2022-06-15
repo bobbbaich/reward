@@ -108,7 +108,7 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroupId'
+            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
           Subnets:
             - !ImportValue
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
