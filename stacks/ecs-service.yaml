@@ -50,6 +50,13 @@ Parameters:
 Conditions:
   HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
 
+Resource handler returned message: "Model validation failed (
+#/LoadBalancers/0/ContainerPort: expected type: Number, found: String 
+#/DesiredCount: expected type: Number, found: String 
+#/NetworkConfiguration/AwsvpcConfiguration/SecurityGroups: expected type: JSONArray, found: String 
+#/DeploymentConfiguration/MaximumPercent: expected type: Number, found: String 
+#/DeploymentConfiguration/MinimumHealthyPercent: expected type: Number, found: String)"
+
 Resources:
   # A log group for storing the stdout logs from this service's containers
   LogGroup:
@@ -107,8 +114,9 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
-          SecurityGroups: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
+          SecurityGroups:
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
           Subnets:
             - !ImportValue
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
