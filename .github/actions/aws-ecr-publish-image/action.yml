@@ -10,7 +10,7 @@ inputs:
 
 outputs:
   ecr-image:
-    description: "Built image"
+    description: "Built image URL"
     value: ${{ steps.build-image.outputs.ecr-image }}
 
 runs:
@@ -42,10 +42,4 @@ runs:
         mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_IMAGE_URL
         docker push $ECR_IMAGE_URL
         echo "::set-output name=ecr-image::$(echo $ECR_IMAGE_URL)"
-      shell: bash
-
-    - name: show outputs
-      id: show-outputs
-      run: |
-        echo "The ecr image is ${{ steps.build-image.outputs.ecr-image }}"
       shell: bash

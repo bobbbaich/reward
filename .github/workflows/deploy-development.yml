@@ -31,15 +31,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
-        id: from-deploy
+        id: aws-ecr-publish-image
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-      - name: show outputs again
-        id: show-outputs-again
-        run: |
-          echo "The ecr image is ${{ steps.from-deploy.outputs.ecr-image }}"
-        shell: bash
+    outputs:
+      ecr-image:  ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
 
   deploy:
     name: Deploy
