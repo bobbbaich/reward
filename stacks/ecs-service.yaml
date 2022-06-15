@@ -111,9 +111,9 @@ Resources:
             'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroupId'
           Subnets:
             - !ImportValue
-              'Fn::Sub': '${EnvironmentName}:PrivateSubnet1Id'
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
             - !ImportValue
-              'Fn::Sub': '${EnvironmentName}:PrivateSubnet2Id'
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
