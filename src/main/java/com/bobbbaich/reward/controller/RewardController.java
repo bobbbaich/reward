@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/reward")
+@RequestMapping("/api/rewards/gifts")
 public class RewardController {
 
     @GetMapping
