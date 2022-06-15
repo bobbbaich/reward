@@ -31,9 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
+        id: from-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+      - name: show outputs again
+        id: show-outputs-again
+        run: |
+          echo "The ecr image is ${{ steps.from-deploy.outputs.ecr-image }}"
+        shell: bash
 
   deploy:
     name: Deploy
@@ -41,7 +47,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     env:
-      ECR_REGISTRY: ${{ needs.build-image.outputs.ecr-image }}
+      ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-deploy
