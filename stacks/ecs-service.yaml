@@ -94,7 +94,7 @@ Resources:
   # as monitor the number of running tasks and replace any that have crashed
   Service:
     Type: AWS::ECS::Service
-    DependsOn: LoadBalancerRule
+    DependsOn: LoadBalancerListenerRule
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster: !ImportValue
