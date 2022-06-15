@@ -98,7 +98,7 @@ Resources:
     Properties:
       ServiceName: !Ref 'ServiceName'
       Cluster: !ImportValue
-        'Fn::Sub': '${EnvironmentName}-poc-cluster'
+        'Fn::Sub': '${EnvironmentName}:ECSCluster'
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
