@@ -62,9 +62,9 @@ Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
+      Family: !Ref ServiceName
+      Cpu: !Ref ContainerCpu
+      Memory: !Ref ContainerMemory
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -73,21 +73,21 @@ Resources:
       TaskRoleArn:
         Fn::If:
           - 'HasCustomRole'
-          - !Ref 'Role'
+          - !Ref Role
           - !Ref "AWS::NoValue"
       ContainerDefinitions:
-        - Name: !Ref 'ServiceName'
-          Cpu: !Ref 'ContainerCpu'
-          Memory: !Ref 'ContainerMemory'
-          Image: !Ref 'ImageUrl'
+        - Name: !Ref ServiceName
+          Cpu: !Ref ContainerCpu
+          Memory: !Ref ContainerMemory
+          Image: !Ref ImageUrl
           PortMappings:
-            - ContainerPort: !Ref 'ContainerPort'
+            - ContainerPort: !Ref ContainerPort
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
               awslogs-group: !Sub ${EnvironmentName}-service-${ServiceName}
               awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: !Ref 'ServiceName'
+              awslogs-stream-prefix: !Ref ServiceName
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
@@ -96,14 +96,14 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn: LoadBalancerListenerRule
     Properties:
-      ServiceName: !Ref 'ServiceName'
+      ServiceName: !Ref ServiceName
       Cluster: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ECSCluster'
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
         MinimumHealthyPercent: 75
-      DesiredCount: !Ref 'DesiredCount'
+      DesiredCount: !Ref DesiredCount
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
@@ -114,11 +114,11 @@ Resources:
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
             - !ImportValue
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
-      TaskDefinition: !Ref 'TaskDefinition'
+      TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
-          TargetGroupArn: !Ref 'TargetGroup'
+        - ContainerName: !Ref ServiceName
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !Ref TargetGroup
 
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
@@ -134,8 +134,8 @@ Resources:
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       TargetType: ip
-      Name: !Ref 'ServiceName'
-      Port: !Ref 'ContainerPort'
+      Name: !Ref ServiceName
+      Port: !Ref ContainerPort
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       VpcId: !ImportValue
@@ -146,11 +146,11 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       Actions:
-        - TargetGroupArn: !Ref 'TargetGroup'
+        - TargetGroupArn: !Ref TargetGroup
           Type: 'forward'
       Conditions:
         - Field: path-pattern
           Values: [ '/reward/api/*' ]
       ListenerArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:PublicLoadBalancerListener'
-      Priority: !Ref 'Priority'
+      Priority: !Ref Priority
