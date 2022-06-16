@@ -109,7 +109,7 @@ Resources:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - !ImportValue
-              'Fn::Sub': '${EnvironmentName}:ContainerSecurityGroup'
+              'Fn::Sub': '${EnvironmentName}:ContainerSG'
           Subnets:
             - !ImportValue
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
