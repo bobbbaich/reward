@@ -129,10 +129,10 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 6
+      HealthCheckIntervalSeconds: 15
       HealthCheckPath: /api/rewards/gifts
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
+      HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref ServiceName
@@ -151,7 +151,7 @@ Resources:
           Type: 'forward'
       Conditions:
         - Field: path-pattern
-          Values: [ '/api/rewards/*', '/api/rewards' ]
+          Values: [ '/api/rewards/', '/api/rewards/*' ]
       ListenerArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:PublicLoadBalancerListener'
       Priority: !Ref Priority
