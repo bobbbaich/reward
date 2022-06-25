@@ -129,10 +129,10 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 15
+      HealthCheckIntervalSeconds: 45
       HealthCheckPath: /api/rewards/gifts
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 10
+      HealthCheckTimeoutSeconds: 30
       HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref ServiceName
