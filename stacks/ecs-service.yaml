@@ -155,3 +155,45 @@ Resources:
       ListenerArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:PublicLoadBalancerListener'
       Priority: !Ref Priority
+
+  ECSScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 4
+      MinCapacity: 2  
+      RoleARN: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:AutoscalingRole' 
+      ServiceNamespace: ecs
+      ScalableDimension: 'ecs:service:DesiredCount'
+      ResourceId: !Join 
+        - /
+        - - service
+          - !ImportValue 
+            'Fn::Sub': '${EnvironmentName}:ECSCluster' 
+          - !GetAtt Service.Name
+
+  ServiceScalingPolicyCPU:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${AWS::StackName}-target-tracking-cpu70
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref ECSScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 70.0
+        ScaleInCooldown: 180
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+          
+  ServiceScalingPolicyMem:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${AWS::StackName}-target-tracking-mem90
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref ECSScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 90.0
+        ScaleInCooldown: 180
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
