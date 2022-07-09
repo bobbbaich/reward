@@ -46,12 +46,6 @@ Parameters:
     Default: ""
     Description: (Optional) An IAM role to give the service's containers if the code within needs to
       access other AWS resources like S3 buckets, DynamoDB tables, etc
-  DBUsernameSSMKey:
-    Type: String
-    Description: DB Instance Name SSM Key
-  DBPasswordSSMKey:
-    Type: String
-    Description: DB Instance Password SSM Key
 
 Conditions:
   HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
