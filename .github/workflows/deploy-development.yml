@@ -36,7 +36,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
     outputs:
-      ecr-image:  ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
+      ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
 
   deploy:
     name: Deploy
@@ -52,3 +52,5 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           ecr-image: ${{ env.ECR_IMAGE }}
+          db-username: ${{ secrets.DB_USERNAME }}
+          db-password: ${{ secrets.DB_PASSWORD }}

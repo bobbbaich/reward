@@ -10,6 +10,12 @@ inputs:
   ecr-image:
     required: true
     description: "The ecr-image of the service to be deployed"
+  db-username:
+    required: false
+    description: "The DB username"
+  db-password:
+    required: false
+    description: "The DB password"
 
 runs:
   using: "composite"
@@ -27,4 +33,8 @@ runs:
         name: ${{ env.ENVIRONMENT }}-reward-service
         template: stacks/ecs-service.yaml
         no-fail-on-empty-changeset: "1"
-        parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }},ImageUrl=${{ inputs.ecr-image }}"
+        parameter-overrides: "
+          EnvironmentName=${{ env.ENVIRONMENT }}, 
+          ImageUrl=${{ inputs.ecr-image }}, 
+          DBUsername=${{ inputs.db-username }}, 
+          DBPassword=${{ inputs.db-password }}"

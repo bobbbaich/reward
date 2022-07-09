@@ -46,6 +46,12 @@ Parameters:
     Default: ""
     Description: (Optional) An IAM role to give the service's containers if the code within needs to
       access other AWS resources like S3 buckets, DynamoDB tables, etc
+  DBUsername:
+    Type: String
+    Description: DB Instance Name
+  DBPassword:
+    Type: String
+    Description: DB Instance Password
 
 Conditions:
   HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
@@ -160,16 +166,16 @@ Resources:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
       MaxCapacity: 4
-      MinCapacity: 2  
+      MinCapacity: 2
       RoleARN: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:AutoscalingRole' 
+        'Fn::Sub': '${EnvironmentName}:AutoscalingRole'
       ServiceNamespace: ecs
       ScalableDimension: 'ecs:service:DesiredCount'
-      ResourceId: !Join 
+      ResourceId: !Join
         - /
         - - service
-          - !ImportValue 
-            'Fn::Sub': '${EnvironmentName}:ECSCluster' 
+          - !ImportValue
+            'Fn::Sub': '${EnvironmentName}:ECSCluster'
           - !GetAtt Service.Name
 
   ServiceScalingPolicyCPU:
@@ -184,7 +190,7 @@ Resources:
         ScaleOutCooldown: 60
         PredefinedMetricSpecification:
           PredefinedMetricType: ECSServiceAverageCPUUtilization
-          
+
   ServiceScalingPolicyMem:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
@@ -197,3 +203,18 @@ Resources:
         ScaleOutCooldown: 60
         PredefinedMetricSpecification:
           PredefinedMetricType: ECSServiceAverageMemoryUtilization
+
+  SetupDB:
+    Type: AWS::CloudFormation::CustomResource
+    Version: "1.0"
+    Properties:
+      ServiceToken: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:DatabaseSetupPGLambda'
+      DBHost: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+      DBPort: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+      DBUsername: !Ref DBUsername
+      DBPassword: !Ref DBPassword
+      ServiceDBName: !Ref ServiceName
+
