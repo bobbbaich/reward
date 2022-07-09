@@ -52,5 +52,3 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           ecr-image: ${{ env.ECR_IMAGE }}
-          db-username: ${{ secrets.DB_USERNAME }}
-          db-password: ${{ secrets.DB_PASSWORD }}

@@ -46,12 +46,12 @@ Parameters:
     Default: ""
     Description: (Optional) An IAM role to give the service's containers if the code within needs to
       access other AWS resources like S3 buckets, DynamoDB tables, etc
-  DBUsername:
+  DBUsernameSSMKey:
     Type: String
-    Description: DB Instance Name
-  DBPassword:
+    Description: DB Instance Name SSM Key
+  DBPasswordSSMKey:
     Type: String
-    Description: DB Instance Password
+    Description: DB Instance Password SSM Key
 
 Conditions:
   HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
@@ -214,7 +214,7 @@ Resources:
         'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
       DBPort: !ImportValue
         'Fn::Sub': '${EnvironmentName}:DBInstancePort'
-      DBUsername: !Ref DBUsername
-      DBPassword: !Ref DBPassword
+      DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+      DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
       ServiceDBName: !Ref ServiceName
 
