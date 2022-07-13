@@ -88,6 +88,15 @@ Resources:
               awslogs-group: !Sub ${EnvironmentName}-service-${ServiceName}
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref ServiceName
+          Environment:
+            ACTIVE_ENVIRONMENT: !Ref EnvironmentName
+            DB_HOST: !ImportValue
+              'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+            DB_PORT: !ImportValue
+              'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+            DB_NAME: !Ref ServiceName
+            DB_USERNAME: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+            DB_PASSWORD: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
@@ -204,11 +213,5 @@ Resources:
     Properties:
       ServiceToken: !ImportValue
         'Fn::Sub': '${EnvironmentName}:SetupDatabaseLambda'
-      DBHost: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
-      DBPort: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:DBInstancePort'
-      DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
-      DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
       ServiceDBName: !Ref ServiceName
 
