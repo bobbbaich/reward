@@ -89,14 +89,21 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref ServiceName
           Environment:
-            ACTIVE_ENVIRONMENT: !Ref EnvironmentName
-            DB_HOST: !ImportValue
-              'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
-            DB_PORT: !ImportValue
-              'Fn::Sub': '${EnvironmentName}:DBInstancePort'
-            DB_NAME: !Ref ServiceName
-            DB_USERNAME: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
-            DB_PASSWORD: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
+            - Name: ACTIVE_ENVIRONMENT
+              Value: !Ref EnvironmentName
+            - Name: DB_HOST
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+            - Name: DB_PORT
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+            - Name: DB_NAME
+              Value: !Ref ServiceName
+          Secrets:
+            - Name: DB_USERNAME
+              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+            - Name: DB_PASSWORD
+              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
