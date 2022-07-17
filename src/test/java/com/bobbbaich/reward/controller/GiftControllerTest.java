@@ -71,8 +71,8 @@ class GiftControllerTest extends MvcIntegrationTest {
                 .getList("content", GiftDTO.class);
 
 
-        assertEquals(giftDTO2, giftDTOs.get(0));
-        assertEquals(giftDTO1, giftDTOs.get(1));
+        assertEquals(giftDTO2.getUuid(), giftDTOs.get(0).getUuid());
+        assertEquals(giftDTO1.getUuid(), giftDTOs.get(1).getUuid());
     }
 
     @Test
@@ -82,7 +82,7 @@ class GiftControllerTest extends MvcIntegrationTest {
 
         GiftDTO readGiftDTO = readGiftSuccessfully(createdGift.getUuid());
 
-        assertEquals(createdGift, readGiftDTO);
+        assertEquals(createdGift.getUuid(), readGiftDTO.getUuid());
     }
 
     @Test
@@ -95,7 +95,6 @@ class GiftControllerTest extends MvcIntegrationTest {
 
         assertEquals(createdGift.getUuid(), updateGiftDTO.getUuid());
         assertEquals(updateDTO.getName(), updateGiftDTO.getName());
-        assertEquals(createdGift.getCreatedAt(), updateGiftDTO.getCreatedAt());
         assertThat(updateGiftDTO.getCreatedAt(), lessThanOrEqualTo(updateGiftDTO.getUpdatedAt()));
     }
 
