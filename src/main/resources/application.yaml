@@ -1,4 +1,8 @@
+server:
+  port: 8080
 spring:
+  application:
+    name: @project.artifactId@
   profiles:
     active: ${ACTIVE_ENVIRONMENT}
   datasource:
@@ -9,3 +13,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

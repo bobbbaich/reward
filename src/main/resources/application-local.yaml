@@ -6,3 +6,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+server:
+  port: ${random.int(9999)}
