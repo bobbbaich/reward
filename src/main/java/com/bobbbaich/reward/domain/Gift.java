@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class Gift {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     @Column(name = "uuid", updatable = false)
     private UUID uuid = randomUUID();
 
