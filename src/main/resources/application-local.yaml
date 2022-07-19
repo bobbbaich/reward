@@ -9,6 +9,6 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8080
+        url: http://localhost:8080/api/admin
 server:
   port: ${random.int(9999)}
