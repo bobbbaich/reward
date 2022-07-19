@@ -63,7 +63,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         GiftDTO giftDTO2 = createGiftSuccessfully(getCreateGiftDTO());
 
         List<GiftDTO> giftDTOs = when()
-                .get("/api/rewards/gifts")
+                .get("/gifts")
                 .then()
                 .statusCode(OK.value())
                 .extract()
@@ -105,7 +105,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         GiftDTO createdGift = createGiftSuccessfully(createDTO);
 
         when()
-                .delete("/api/rewards/gifts/{uuid}", createdGift.getUuid())
+                .delete("/gifts/{uuid}", createdGift.getUuid())
                 .then()
                 .statusCode(NO_CONTENT.value());
 
@@ -123,7 +123,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         return with()
                 .body(createDTO)
                 .contentType(JSON)
-                .post("/api/rewards/gifts");
+                .post("/gifts");
     }
 
     private GiftDTO updateGiftSuccessfully(UUID uuid, UpdateGiftDTO updateDTO) {
@@ -138,7 +138,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         return with()
                 .body(updateDTO)
                 .contentType(JSON)
-                .put("/api/rewards/gifts/{uuid}", uuid);
+                .put("/gifts/{uuid}", uuid);
     }
 
     private GiftDTO readGiftSuccessfully(UUID uuid) {
@@ -151,7 +151,7 @@ class GiftControllerTest extends MvcIntegrationTest {
 
     private Response readGift(UUID uuid) {
         return when()
-                .get("/api/rewards/gifts/{uuid}", uuid);
+                .get("/gifts/{uuid}", uuid);
     }
 
     private CreateGiftDTO getCreateGiftDTO() {

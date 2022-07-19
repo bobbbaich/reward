@@ -91,6 +91,9 @@ Resources:
           Environment:
             - Name: ACTIVE_ENVIRONMENT
               Value: !Ref EnvironmentName
+            - Name: BASE_URL
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:BaseUrl'
             - Name: DB_HOST
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
@@ -166,7 +169,7 @@ Resources:
           Type: 'forward'
       Conditions:
         - Field: path-pattern
-          Values: [ '/api/rewards/', '/api/rewards/*' ]
+          Values: [ '/api/reward/', '/api/reward/*' ]
       ListenerArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:PublicLoadBalancerListener'
       Priority: !Ref Priority

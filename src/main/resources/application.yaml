@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api/reward
 spring:
   application:
     name: @project.artifactId@
@@ -13,6 +15,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  boot:
+    admin:
+      client:
+        url: ${BASE_URL}/api/admin
 management:
   endpoints:
     web:

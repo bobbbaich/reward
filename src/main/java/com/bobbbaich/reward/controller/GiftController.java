@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/rewards/gifts")
+@RequestMapping("/gifts")
 public class GiftController {
 
     private final GiftService giftService;
