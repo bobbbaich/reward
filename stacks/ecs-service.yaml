@@ -1,46 +1,29 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Deploy a service on AWS Fargate, hosted in a private subnet, but accessible via a public load balancer.
+
 Parameters:
   EnvironmentName:
     Type: String
-    Default: development
-    Description: The name of the environment to add this service to
   ServiceName:
     Type: String
     Default: reward
-    Description: A name for the service
   ImageUrl:
     Type: String
-    Description: The url of a docker image that contains the application process that
-      will handle the traffic for this service
   ContainerPort:
     Type: Number
     Default: 8080
-    Description: What port number the application inside the docker container is binding to
   ContainerCpu:
     Type: Number
     Default: 256
-    Description: How much CPU to give the container. 1024 is 1 CPU
   ContainerMemory:
     Type: Number
     Default: 1024
-    Description: How much memory in megabytes to give the container
-  Path:
-    Type: String
-    Default: "*"
-    Description: A path on the load balancer that this service
-      should be connected to. Use * to send all load balancer
-      traffic to this service.
   Priority:
     Type: Number
     Default: 1
-    Description: The priority for the routing rule added to the load balancer.
-      This only applies if your have multiple services which have been
-      assigned to different paths on the load balancer.
   DesiredCount:
     Type: Number
     Default: 2
-    Description: How many copies of the service task to run
   Role:
     Type: String
     Default: ""
@@ -51,7 +34,6 @@ Conditions:
   HasCustomRole: !Not [ !Equals [ !Ref 'Role', '' ] ]
 
 Resources:
-  # A log group for storing the stdout logs from this service's containers
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -148,7 +130,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 45
-      HealthCheckPath: /actuator/health
+      HealthCheckPath: /api/reward/actuator/health
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 30
       HealthyThresholdCount: 2
