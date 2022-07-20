@@ -19,6 +19,8 @@ spring:
     admin:
       client:
         url: ${BASE_URL}/api/admin
+        instance:
+          service-base-url: ${BASE_URL}
 management:
   endpoints:
     web:
