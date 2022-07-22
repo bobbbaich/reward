@@ -121,7 +121,7 @@ Resources:
           ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref TargetGroup
       ServiceRegistries:
-        - RegistryArn: !Ref ServiceDiscoveryService
+        - RegistryArn: !GetAtt ServiceDiscoveryService.Arn
           Port: !Ref ContainerPort
 
   ServiceDiscoveryService:
