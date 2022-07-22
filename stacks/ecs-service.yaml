@@ -120,6 +120,10 @@ Resources:
         - ContainerName: !Ref ServiceName
           ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref TargetGroup
+      ServiceRegistries:
+        - RegistryArn: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DiscoveryServiceArn'
+          Port: !Ref ContainerPort
 
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
