@@ -127,7 +127,7 @@ Resources:
   ServiceDiscoveryService:
     Type: AWS::ServiceDiscovery::Service
     Properties:
-      Name: !Sub ${EnvironmentName}-application-sd
+      Name: !Sub ${EnvironmentName}-${ServiceName}-sd
       Description: !Sub ${EnvironmentName} Application Discovery Service
       NamespaceId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ServiceDiscoveryNamespaceId'
