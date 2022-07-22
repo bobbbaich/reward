@@ -121,9 +121,25 @@ Resources:
           ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref TargetGroup
       ServiceRegistries:
-        - RegistryArn: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:DiscoveryServiceArn'
+        - RegistryArn: !Ref ServiceDiscoveryService
           Port: !Ref ContainerPort
+
+  ServiceDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: !Sub ${EnvironmentName}-application-sd
+      Description: !Sub ${EnvironmentName} Application Discovery Service
+      NamespaceId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ServiceDiscoveryNamespaceId'
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+          - TTL: 60
+            Type: SRV
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
 
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
