@@ -64,11 +64,8 @@ Resources:
         - FARGATE
       ExecutionRoleArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ECSTaskExecutionRole'
-      TaskRoleArn:
-        Fn::If:
-          - 'HasCustomRole'
-          - !Ref Role
-          - !Ref "AWS::NoValue"
+      TaskRoleArn: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ECSTaskRole'
       ContainerDefinitions:
         - Name: xray-sidecar
           Cpu: !Ref XRayCPU
