@@ -23,7 +23,7 @@ public class XRayConfiguration extends AbstractXRayInterceptor {
     }
 
     @Override
-    @Pointcut("@within(com.amazonaws.xray.spring.aop.XRayEnabled) && within(com.bobbbaich.reward.*))")
+    @Pointcut("@within(com.amazonaws.xray.spring.aop.XRayEnabled) && within(com.bobbbaich..*)")
     protected void xrayEnabledClasses() {
     }
 }
