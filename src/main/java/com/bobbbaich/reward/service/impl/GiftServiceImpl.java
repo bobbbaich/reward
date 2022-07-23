@@ -1,5 +1,6 @@
 package com.bobbbaich.reward.service.impl;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.bobbbaich.reward.domain.Gift;
 import com.bobbbaich.reward.dto.CreateGiftDTO;
 import com.bobbbaich.reward.dto.GiftDTO;
@@ -22,6 +23,7 @@ import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
+@XRayEnabled
 @Service
 public class GiftServiceImpl implements GiftService {
 
