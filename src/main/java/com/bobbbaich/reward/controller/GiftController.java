@@ -1,5 +1,6 @@
 package com.bobbbaich.reward.controller;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.bobbbaich.reward.dto.CreateGiftDTO;
 import com.bobbbaich.reward.dto.GiftDTO;
 import com.bobbbaich.reward.dto.UpdateGiftDTO;
@@ -18,6 +19,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+@XRayEnabled
 @Slf4j
 @RequiredArgsConstructor
 @RestController
