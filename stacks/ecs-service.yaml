@@ -18,6 +18,18 @@ Parameters:
   ContainerMemory:
     Type: Number
     Default: 2048
+  XRayCPU:
+    Type: Number
+    Default: 32
+  XRayMemory:
+    Type: Number
+    Default: 256
+  ServiceCPU:
+    Type: Number
+    Default: 480
+  ServiceMemory:
+    Type: Number
+    Default: 1792
   Priority:
     Type: Number
     Default: 1
@@ -59,15 +71,15 @@ Resources:
           - !Ref "AWS::NoValue"
       ContainerDefinitions:
         - Name: xray-sidecar
-          Cpu: 32
-          Memory: 256
+          Cpu: !Ref XRayCPU
+          Memory: !Ref XRayMemory
           Image: amazon/aws-xray-daemon
           PortMappings:
             - ContainerPort: 2000
               Protocol: udp
         - Name: !Ref ServiceName
-          Cpu: !Ref ContainerCpu
-          Memory: !Ref ContainerMemory
+          Cpu: !Ref ServiceCPU
+          Memory: !Ref ServiceMemory
           Image: !Ref ImageUrl
           PortMappings:
             - ContainerPort: !Ref ContainerPort
