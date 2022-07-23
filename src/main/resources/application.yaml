@@ -12,6 +12,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    tomcat:
+      jdbc-interceptors:
+        - com.amazonaws.xray.sql.postgres.TracingInterceptor
   jpa:
     hibernate:
       ddl-auto: validate
