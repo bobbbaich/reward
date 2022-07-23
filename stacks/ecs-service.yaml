@@ -64,7 +64,7 @@ Resources:
           Image: amazon/aws-xray-daemon
           PortMappings:
             - ContainerPort: 2000
-            - Protocol: udp
+              Protocol: udp
         - Name: !Ref ServiceName
           Cpu: !Ref ContainerCpu
           Memory: !Ref ContainerMemory
