@@ -133,10 +133,6 @@ Resources:
             - !ImportValue
               'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
       TaskDefinition: !Ref TaskDefinition
-      LoadBalancers:
-        - ContainerName: !Ref ServiceName
-          ContainerPort: !Ref ContainerPort
-          TargetGroupArn: !Ref TargetGroup
       ServiceRegistries:
         - RegistryArn: !GetAtt ServiceDiscoveryService.Arn
           Port: !Ref ContainerPort
