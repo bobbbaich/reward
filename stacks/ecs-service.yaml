@@ -79,7 +79,7 @@ Resources:
           PortMappings:
             - ContainerPort: !Ref ContainerPort
           HealthCheck:
-            Command: [ "CMD-SHELL", "curl -f http://localhost/api/reward/actuator/health || exit 1" ]
+            Command: [ "CMD-SHELL", "curl -f http://localhost:8080/api/reward/actuator/health || exit 1" ]
             Interval: 45
             Retries: 2
             StartPeriod: 30
