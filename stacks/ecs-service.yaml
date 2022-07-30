@@ -129,14 +129,14 @@ Resources:
     Type: AWS::ServiceDiscovery::Service
     Properties:
       Name: !Ref ServiceName
-      Description: !Sub ${EnvironmentName} Application Discovery Service
+      Description: !Sub ${EnvironmentName} ${ServiceName} service
       NamespaceId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ServiceDiscoveryNamespaceId'
       DnsConfig:
         RoutingPolicy: MULTIVALUE
         DnsRecords:
-          - TTL: 60
-            Type: A
+#          - TTL: 60
+#            Type: A
           - TTL: 60
             Type: SRV
       HealthCheckCustomConfig:
