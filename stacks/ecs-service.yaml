@@ -78,6 +78,13 @@ Resources:
           Image: !Ref ImageUrl
           PortMappings:
             - ContainerPort: !Ref ContainerPort
+          HealthCheck:
+            Command:
+              - [ "CMD-SHELL", "curl -f http://localhost/api/reward/actuator/health || exit 1" ]
+            Interval: 45
+            Retries: 2
+            StartPeriod: 30
+            Timeout: 30
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -150,22 +157,6 @@ Resources:
             Type: SRV
       HealthCheckCustomConfig:
         FailureThreshold: 1
-
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckIntervalSeconds: 45
-      HealthCheckPath: /api/reward/actuator/health
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 30
-      HealthyThresholdCount: 2
-      TargetType: ip
-      Name: !Ref ServiceName
-      Port: !Ref ContainerPort
-      Protocol: HTTP
-      UnhealthyThresholdCount: 2
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
 
   ECSScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
