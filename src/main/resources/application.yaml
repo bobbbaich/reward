@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${CONTAINER_PORT:8080}
   servlet:
     context-path: /api/reward
 spring:
@@ -16,12 +16,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-  boot:
-    admin:
-      client:
-        url: ${BASE_URL}/api/admin
-        instance:
-          service-base-url: ${BASE_URL}
 management:
   endpoints:
     web:

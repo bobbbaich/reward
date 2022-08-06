@@ -11,7 +11,7 @@ Parameters:
     Type: String
   ContainerPort:
     Type: Number
-    Default: 8080
+    Default: 80
   ContainerCpu:
     Type: Number
     Default: 512
@@ -67,12 +67,6 @@ Resources:
           Image: !Ref ImageUrl
           PortMappings:
             - ContainerPort: !Ref ContainerPort
-#          HealthCheck:
-#            Command: [ "CMD-SHELL", "curl -f http://localhost:8080/api/reward/actuator/health || exit 1" ]
-#            Interval: 45
-#            Retries: 2
-#            StartPeriod: 50
-#            Timeout: 30
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -82,9 +76,8 @@ Resources:
           Environment:
             - Name: ACTIVE_ENVIRONMENT
               Value: !Ref EnvironmentName
-            - Name: BASE_URL
-              Value: !ImportValue
-                'Fn::Sub': '${EnvironmentName}:BaseUrl'
+            - Name: CONTAINER_PORT
+              Value: !Ref ContainerPort
             - Name: DB_HOST
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
@@ -123,7 +116,6 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       ServiceRegistries:
         - RegistryArn: !GetAtt ServiceDiscoveryService.Arn
-          Port: !Ref ContainerPort
 
   ServiceDiscoveryService:
     Type: AWS::ServiceDiscovery::Service
@@ -135,10 +127,8 @@ Resources:
       DnsConfig:
         RoutingPolicy: MULTIVALUE
         DnsRecords:
-#          - TTL: 60
-#            Type: A
           - TTL: 60
-            Type: SRV
+            Type: A
       HealthCheckCustomConfig:
         FailureThreshold: 1
 
