@@ -12,10 +12,10 @@ Parameters:
   ContainerPort:
     Type: Number
     Default: 80
-  ContainerCpu:
+  TaskCpu:
     Type: Number
     Default: 512
-  ContainerMemory:
+  TaskMemory:
     Type: Number
     Default: 2048
   XRayCPU:
@@ -44,8 +44,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref ServiceName
-      Cpu: !Ref ContainerCpu
-      Memory: !Ref ContainerMemory
+      Cpu: !Ref TaskCpu
+      Memory: !Ref TaskMemory
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
