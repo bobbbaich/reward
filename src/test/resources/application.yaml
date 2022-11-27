@@ -9,3 +9,13 @@ spring:
 logging:
   level:
     com.bobbbaich: DEBUG
+
+security:
+  oauth2:
+    resource:
+      #      userInfoUri: https://cloudbohdan.auth.us-east-1.amazoncognito.com/oauth2/userInfo
+      #      tokenInfoUri: https://cloudbohdan.auth.us-east-1.amazoncognito.com/oauth2/token
+      jwk:
+        key-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD/.well-known/jwks.json
+#    client:
+#      clientId: 42jbt1kddgr5ibjj6mtmgobf2l
