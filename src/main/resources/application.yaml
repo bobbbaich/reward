@@ -16,6 +16,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+security:
+  oauth2:
+    resource:
+      userInfoUri: https://${COGNITO_APPLICATION_DOMAIN_NAME}.auth.${COGNITO_REGION}.amazoncognito.com/oauth2/userInfo
+      tokenInfoUri: https://${COGNITO_APPLICATION_DOMAIN_NAME}.auth.${COGNITO_REGION}.amazoncognito.com/oauth2/token
+      jwk:
+        key-set-uri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}/.well-known/jwks.json
+    client:
+      clientId: ${COGNITO_CLIENT_ID}
 management:
   endpoints:
     web:

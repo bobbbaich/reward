@@ -90,6 +90,17 @@ Resources:
               Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:username}}'
             - Name: DB_PASSWORD
               Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:password}}'
+            - Name: COGNITO_APPLICATION_DOMAIN_NAME
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoApplicationDomainName'
+            - Name: COGNITO_REGION
+              Value: !Ref 'AWS::Region'
+            - Name: COGNITO_USER_POOL_ID
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoUserPoolId'
+            - Name: COGNITO_CLIENT_ID
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoClientId'
 
   Service:
     Type: AWS::ECS::Service

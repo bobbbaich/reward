@@ -7,11 +7,13 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.cloud.sleuth.brave.LocalServiceName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import javax.servlet.Filter;
 
 @Aspect
 @Configuration
+@Profile("!local")
 public class XRayConfiguration extends AbstractXRayInterceptor {
 
     @LocalServiceName
