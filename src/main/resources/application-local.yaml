@@ -14,15 +14,12 @@ spring:
         url: http://localhost:8080/api/admin
         instance:
           service-base-url: http://localhost:8081
-security:
-  oauth2:
-    resource:
-      userInfoUri: https://cloudbohdan.auth.us-east-1.amazoncognito.com/oauth2/userInfo
-      tokenInfoUri: https://cloudbohdan.auth.us-east-1.amazoncognito.com/oauth2/token
-      jwk:
-        key-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD/.well-known/jwks.json
-    client:
-      clientId: 42jbt1kddgr5ibjj6mtmgobf2l
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD/.well-known/jwks.json
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD
 logging:
   level:
     com.bobbbaich: DEBUG

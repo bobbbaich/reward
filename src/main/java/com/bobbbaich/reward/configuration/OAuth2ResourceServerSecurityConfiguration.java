@@ -1,26 +1,35 @@
 package com.bobbbaich.reward.configuration;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
 
 import java.util.List;
 
+@Configuration
 @RequiredArgsConstructor
 @EnableResourceServer
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerConfigurerAdapter {
 
-    private final ResourceServerProperties resource;
+    private final OAuth2ResourceServerProperties resource;
     private final CognitoAccessTokenConverter cognitoAccessTokenConverter;
+
+    @Value("${spring.security.oauth2.resourceserver.stateless:true}")
+    private boolean stateless;
+
+    @Override
+    public void configure(ResourceServerSecurityConfigurer configurer) {
+        configurer.stateless(stateless);
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -32,9 +41,10 @@ public class OAuth2ResourceServerSecurityConfiguration extends ResourceServerCon
     }
 
     @Bean
+    @Profile("!test")
     public TokenStore jwkTokenStore() {
         return new JwkTokenStore(
-                List.of(resource.getJwk().getKeySetUri()),
+                List.of(resource.getJwt().getJwkSetUri()),
                 cognitoAccessTokenConverter,
                 null
         );

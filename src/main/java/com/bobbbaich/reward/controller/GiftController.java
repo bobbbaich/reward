@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,28 +30,32 @@ public class GiftController {
     private final GiftService giftService;
 
     @PostMapping
+    @PreAuthorize("#oauth2.hasScope('reward-write')")
     @ResponseStatus(CREATED)
     public GiftDTO create(@Valid @RequestBody CreateGiftDTO createDTO) {
         return giftService.create(createDTO);
     }
 
     @GetMapping
+    @PreAuthorize("#oauth2.hasScope('reward-read')")
     public Page<GiftDTO> readAll(@PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         return giftService.readAll(pageable);
     }
 
     @GetMapping("/{uuid}")
+    @PreAuthorize("#oauth2.hasScope('reward-read')")
     public GiftDTO read(@Valid @PathVariable UUID uuid) {
         return giftService.read(uuid);
     }
 
     @PutMapping("/{uuid}")
-    public GiftDTO update(@PathVariable UUID uuid,
-                          @Valid @RequestBody UpdateGiftDTO updateDTO) {
+    @PreAuthorize("#oauth2.hasScope('reward-write')")
+    public GiftDTO update(@PathVariable UUID uuid, @Valid @RequestBody UpdateGiftDTO updateDTO) {
         return giftService.update(uuid, updateDTO);
     }
 
     @DeleteMapping("/{uuid}")
+    @PreAuthorize("#oauth2.hasScope('reward-write')")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable UUID uuid) {
         giftService.delete(uuid);

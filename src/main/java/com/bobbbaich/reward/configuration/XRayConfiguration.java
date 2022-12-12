@@ -13,7 +13,7 @@ import javax.servlet.Filter;
 
 @Aspect
 @Configuration
-@Profile("!local")
+@Profile({"!local && !test"})
 public class XRayConfiguration extends AbstractXRayInterceptor {
 
     @LocalServiceName
