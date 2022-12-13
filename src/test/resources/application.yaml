@@ -6,10 +6,6 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${random.uuid}
     password: ${random.uuid}
-  security:
-    oauth2:
-      resourceserver:
-        stateless: false # https://stackoverflow.com/a/44502136/17200531
 logging:
   level:
     com.bobbbaich: DEBUG

@@ -24,8 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 class GiftControllerTest extends MvcIntegrationTest {
+
+    private static final String SCOPE_ROLE_ADMIN = "SCOPE_ROLE_ADMIN";
 
     @Autowired
     private GiftRepository giftRepository;
@@ -65,7 +68,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         SecurityContextHolder.clearContext();
 
         List<GiftDTO> giftDTOs = given()
-                .auth().authentication(oauth2("reward-read"))
+                .auth().with(jwt().authorities(getAuthorities(SCOPE_ROLE_ADMIN)))
                 .when()
                 .get("/gifts")
                 .then()
@@ -108,7 +111,7 @@ class GiftControllerTest extends MvcIntegrationTest {
         GiftDTO createdGift = createGiftSuccessfully(createDTO);
 
         given()
-                .auth().authentication(oauth2("reward-write"))
+                .auth().with(jwt().authorities(getAuthorities(SCOPE_ROLE_ADMIN)))
                 .when()
                 .delete("/gifts/{uuid}", createdGift.getUuid())
                 .then()
@@ -127,7 +130,7 @@ class GiftControllerTest extends MvcIntegrationTest {
     private MockMvcResponse createGift(CreateGiftDTO createDTO) {
         return given()
                 .body(createDTO)
-                .auth().authentication(oauth2("reward-write"))
+                .auth().with(jwt().authorities(getAuthorities(SCOPE_ROLE_ADMIN)))
                 .contentType(JSON)
                 .post("/gifts");
     }
@@ -142,7 +145,7 @@ class GiftControllerTest extends MvcIntegrationTest {
 
     private MockMvcResponse updateGift(UUID uuid, UpdateGiftDTO updateDTO) {
         return given()
-                .auth().authentication(oauth2("reward-write"))
+                .auth().with(jwt().authorities(getAuthorities(SCOPE_ROLE_ADMIN)))
                 .body(updateDTO)
                 .contentType(JSON)
                 .put("/gifts/{uuid}", uuid);
@@ -158,7 +161,7 @@ class GiftControllerTest extends MvcIntegrationTest {
 
     private MockMvcResponse readGift(UUID uuid) {
         return given()
-                .auth().authentication(oauth2("reward-read"))
+                .auth().with(jwt().authorities(getAuthorities(SCOPE_ROLE_ADMIN)))
                 .when()
                 .get("/gifts/{uuid}", uuid);
     }
