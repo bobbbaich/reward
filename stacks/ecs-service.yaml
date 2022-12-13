@@ -18,18 +18,12 @@ Parameters:
   TaskMemory:
     Type: Number
     Default: 2048
-  XRayCPU:
-    Type: Number
-    Default: 32
-  XRayMemory:
-    Type: Number
-    Default: 256
   ServiceCPU:
     Type: Number
-    Default: 480
+    Default: 512
   ServiceMemory:
     Type: Number
-    Default: 1792
+    Default: 2048
   DesiredCount:
     Type: Number
     Default: 2
@@ -54,13 +48,6 @@ Resources:
       TaskRoleArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ECSTaskRole'
       ContainerDefinitions:
-        - Name: xray-sidecar
-          Cpu: !Ref XRayCPU
-          Memory: !Ref XRayMemory
-          Image: amazon/aws-xray-daemon
-          PortMappings:
-            - ContainerPort: 2000
-              Protocol: udp
         - Name: !Ref ServiceName
           Cpu: !Ref ServiceCPU
           Memory: !Ref ServiceMemory

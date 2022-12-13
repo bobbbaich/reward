@@ -12,7 +12,6 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    jdbc-interceptors: com.amazonaws.xray.sql.postgres.TracingInterceptor
   jpa:
     hibernate:
       ddl-auto: validate
@@ -23,7 +22,13 @@ spring:
           jwk-set-uri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}/.well-known/jwks.json
           issuer-uri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}
 management:
+  tracing:
+    sampling:
+      probability: 0.0
   endpoints:
     web:
       exposure:
         include: "*"
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
