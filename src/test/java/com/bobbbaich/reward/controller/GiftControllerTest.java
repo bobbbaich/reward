@@ -18,8 +18,7 @@ import java.util.UUID;
 import static io.restassured.http.ContentType.JSON;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -56,8 +55,10 @@ class GiftControllerTest extends MvcIntegrationTest {
 
         assertThat(giftDTO.getUuid(), notNullValue());
         assertEquals(createDTO.getName(), giftDTO.getName());
-        assertThat(giftDTO.getCreatedAt(), lessThanOrEqualTo(ZonedDateTime.now()));
-        assertThat(giftDTO.getUpdatedAt(), lessThanOrEqualTo(ZonedDateTime.now()));
+        assertThat(giftDTO.getAuditMetadata().getCreatedAt(), lessThanOrEqualTo(ZonedDateTime.now()));
+        assertThat(giftDTO.getAuditMetadata().getUpdatedAt(), lessThanOrEqualTo(ZonedDateTime.now()));
+        assertThat(giftDTO.getAuditMetadata().getCreatedBy(), not(blankOrNullString()));
+        assertThat(giftDTO.getAuditMetadata().getUpdatedBy(), is(giftDTO.getAuditMetadata().getCreatedBy()));
     }
 
     @Test
@@ -101,7 +102,9 @@ class GiftControllerTest extends MvcIntegrationTest {
 
         assertEquals(createdGift.getUuid(), updateGiftDTO.getUuid());
         assertEquals(updateDTO.getName(), updateGiftDTO.getName());
-        assertThat(updateGiftDTO.getCreatedAt(), lessThanOrEqualTo(updateGiftDTO.getUpdatedAt()));
+        assertThat(updateGiftDTO.getAuditMetadata().getCreatedAt(), lessThanOrEqualTo(updateGiftDTO.getAuditMetadata().getUpdatedAt()));
+        assertThat(updateGiftDTO.getAuditMetadata().getCreatedBy(), not(blankOrNullString()));
+        assertThat(updateGiftDTO.getAuditMetadata().getUpdatedBy(), is(updateGiftDTO.getAuditMetadata().getCreatedBy()));
     }
 
     @Test

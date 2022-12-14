@@ -2,7 +2,6 @@ package com.bobbbaich.reward.dto;
 
 import lombok.*;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,6 +11,5 @@ import java.util.UUID;
 public class GiftDTO {
     private UUID uuid;
     private String name;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
+    private AuditMetadataDTO auditMetadata;
 }

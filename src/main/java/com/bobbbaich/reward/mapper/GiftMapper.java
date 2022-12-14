@@ -7,7 +7,7 @@ import com.bobbbaich.reward.dto.UpdateGiftDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {AuditMetadataMapper.class})
 public interface GiftMapper {
 
     GiftDTO map(Gift gift);

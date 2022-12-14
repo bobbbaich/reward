@@ -4,3 +4,5 @@ databaseChangeLog:
       file: db/changelog/db.changelog-000-db-setup.yaml
   - include:
       file: db/changelog/db.changelog-001-add-gift.yaml
+  - include:
+      file: db/changelog/db.changelog-002-update-gift-add-auditing.yaml

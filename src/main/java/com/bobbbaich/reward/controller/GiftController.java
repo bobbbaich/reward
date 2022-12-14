@@ -36,7 +36,7 @@ public class GiftController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
-    public Page<GiftDTO> readAll(@PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
+    public Page<GiftDTO> readAll(@PageableDefault(sort = "auditMetadata.createdAt", direction = DESC) Pageable pageable) {
         return giftService.readAll(pageable);
     }
 

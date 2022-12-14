@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-update-gift-add-auditing
+      author: Bohdan Pohorilyi
+
+      changes:
+        - changes:
+            - addColumn:
+                tableName: gifts
+                columns:
+                  - column:
+                      name: created_by
+                      type: varchar(128)
+                  - column:
+                      name: updated_by
+                      type: varchar(128)

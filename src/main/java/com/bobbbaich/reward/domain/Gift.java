@@ -2,20 +2,17 @@ package com.bobbbaich.reward.domain;
 
 
 import com.bobbbaich.reward.validation.GiftNameConstraint;
-import lombok.Data;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.util.Objects;
 import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static java.util.UUID.randomUUID;
 
 
 @Data
@@ -37,13 +34,8 @@ public class Gift {
     @Column(name = "name")
     private String name;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private ZonedDateTime updatedAt;
+    @Embedded
+    private AuditMetadata auditMetadata = new AuditMetadata();
 
     @Override
     public boolean equals(Object o) {
