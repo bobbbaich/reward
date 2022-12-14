@@ -1,0 +1,6 @@
+# https://github.com/thombergs/code-examples/tree/master/spring-boot/data-migration/liquibase/src/main/resources/db/changelog
+databaseChangeLog:
+  - include:
+      file: db/changelog/db.changelog-000-db-setup.yaml
+  - include:
+      file: db/changelog/db.changelog-001-add-gift.yaml

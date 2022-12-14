@@ -1,0 +1,25 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rewards
+    username: myuser
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080/api/admin
+        instance:
+          service-base-url: http://localhost:8081
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD/.well-known/jwks.json
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BSQbCNTKD
+logging:
+  level:
+    com.bobbbaich: DEBUG

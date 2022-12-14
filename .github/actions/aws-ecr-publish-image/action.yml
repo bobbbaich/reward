@@ -9,9 +9,9 @@ inputs:
     description: "The aws-secret-access-key used to authenticate with AWS"
 
 outputs:
-  image:
-    description: "Built image"
-    value: ${{ steps.build-image.outputs.image }}
+  ecr-image:
+    description: "Built image URL"
+    value: ${{ steps.build-image.outputs.ecr-image }}
 
 runs:
   using: "composite"
@@ -26,6 +26,7 @@ runs:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
         aws-region: ${{ env.AWS_REGION }}
+        mask-aws-account-id: false
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -37,7 +38,10 @@ runs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "Build, tag, and push image to Amazon ECR"
+        ./mvnw clean install -DskipTests
+        ECR_IMAGE_URL="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker build . -t $ECR_IMAGE_URL 
+        docker image push $ECR_IMAGE_URL
+        echo "::set-output name=ecr-image::$(echo $ECR_IMAGE_URL)"
       shell: bash

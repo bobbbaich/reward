@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploy a service on AWS Fargate, hosted in a private subnet, but accessible via a public load balancer
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  ServiceName:
+    Type: String
+    Default: reward
+  ImageUrl:
+    Type: String
+  ContainerPort:
+    Type: Number
+    Default: 80
+  TaskCpu:
+    Type: Number
+    Default: 512
+  TaskMemory:
+    Type: Number
+    Default: 2048
+  ServiceCPU:
+    Type: Number
+    Default: 512
+  ServiceMemory:
+    Type: Number
+    Default: 2048
+  DesiredCount:
+    Type: Number
+    Default: 2
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${EnvironmentName}-service-${ServiceName}
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref ServiceName
+      Cpu: !Ref TaskCpu
+      Memory: !Ref TaskMemory
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ECSTaskExecutionRole'
+      TaskRoleArn: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ECSTaskRole'
+      ContainerDefinitions:
+        - Name: !Ref ServiceName
+          Cpu: !Ref ServiceCPU
+          Memory: !Ref ServiceMemory
+          Image: !Ref ImageUrl
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: !Sub ${EnvironmentName}-service-${ServiceName}
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: !Ref ServiceName
+          Environment:
+            - Name: ACTIVE_ENVIRONMENT
+              Value: !Ref EnvironmentName
+            - Name: CONTAINER_PORT
+              Value: !Ref ContainerPort
+            - Name: DB_HOST
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+            - Name: DB_PORT
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+            - Name: DB_NAME
+              Value: !Ref ServiceName
+            - Name: DB_USERNAME
+              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:username}}'
+            - Name: DB_PASSWORD
+              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:password}}'
+            - Name: COGNITO_APPLICATION_DOMAIN_NAME
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoApplicationDomainName'
+            - Name: COGNITO_REGION
+              Value: !Ref 'AWS::Region'
+            - Name: COGNITO_USER_POOL_ID
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoUserPoolId'
+            - Name: COGNITO_CLIENT_ID
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:CognitoClientId'
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Ref ServiceName
+      Cluster: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ECSCluster'
+      LaunchType: FARGATE
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 75
+      DesiredCount: !Ref DesiredCount
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:ContainerSG'
+          Subnets:
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
+            - !ImportValue
+              'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
+      TaskDefinition: !Ref TaskDefinition
+      ServiceRegistries:
+        - RegistryArn: !GetAtt ServiceDiscoveryService.Arn
+
+  ServiceDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: !Ref ServiceName
+      Description: !Sub ${EnvironmentName} ${ServiceName} service
+      NamespaceId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:ServiceDiscoveryNamespaceId'
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  ECSScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 4
+      MinCapacity: 2
+      RoleARN: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:AutoscalingRole'
+      ServiceNamespace: ecs
+      ScalableDimension: 'ecs:service:DesiredCount'
+      ResourceId: !Join
+        - /
+        - - service
+          - !ImportValue
+            'Fn::Sub': '${EnvironmentName}:ECSCluster'
+          - !GetAtt Service.Name
+
+  ServiceScalingPolicyCPU:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${AWS::StackName}-target-tracking-cpu70
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref ECSScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 70.0
+        ScaleInCooldown: 180
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+
+  ServiceScalingPolicyMem:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${AWS::StackName}-target-tracking-mem90
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref ECSScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 90.0
+        ScaleInCooldown: 180
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
+
+  SetupDB:
+    Type: AWS::CloudFormation::CustomResource
+    Version: "1.0"
+    Properties:
+      ServiceToken: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:SetupDatabaseLambda'
+      ServiceDBName: !Ref ServiceName
+

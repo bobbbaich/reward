@@ -3,19 +3,12 @@ name: Development - Deploy to Amazon ECS
 on:
   push:
     branches:
-      - develop
-      - feature/*
+      - master
 
 env:
-  ENVIRONMENT: development                   # set this to your preferred AWS region, e.g. us-west-1
+  ENVIRONMENT: development
   AWS_REGION: us-east-1                      # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: reward            # set this to your Amazon ECR repository name
-  ECS_SERVICE: MY_ECS_SERVICE                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: MY_ECS_CLUSTER                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # set this to the path to your Amazon ECS task definition
-                                              # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
-                                              # containerDefinitions section of your task definition
+  ECR_REPOSITORY: reward                     # set this to your Amazon ECR repository name
 
 permissions:
   contents: read
@@ -37,18 +30,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
+        id: aws-ecr-publish-image
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+    outputs:
+      ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
 
-  deploy-production:
+  deploy:
     name: Deploy
     needs: build-image
     environment: development
     runs-on: ubuntu-latest
+    env:
+      ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          ecr-image: ${{ env.ECR_IMAGE }}

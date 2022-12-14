@@ -1,0 +1,34 @@
+server:
+  port: ${CONTAINER_PORT:8080}
+  servlet:
+    context-path: /api/reward
+spring:
+  application:
+    name: @project.artifactId@
+  profiles:
+    active: ${ACTIVE_ENVIRONMENT:local}
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}/.well-known/jwks.json
+          issuer-uri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}
+management:
+  tracing:
+    sampling:
+      probability: 0.0
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'

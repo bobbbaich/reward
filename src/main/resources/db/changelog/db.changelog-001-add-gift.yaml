@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-add-gift-1
+      author: Bohdan Pohorilyi
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: gifts
+
+      changes:
+        - createTable:
+            tableName: gifts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: user_pkey
+              - column:
+                  name: uuid
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  defaultValueComputed: ${now}
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: ${now}
+                  constraints:
+                    nullable: false
