@@ -73,10 +73,10 @@ Resources:
                 'Fn::Sub': '${EnvironmentName}:DBInstancePort'
             - Name: DB_NAME
               Value: !Ref ServiceName
-            - Name: DB_USERNAME
-              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:username}}'
-            - Name: DB_PASSWORD
-              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:password}}'
+#            - Name: DB_USERNAME
+#              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:username}}'
+#            - Name: DB_PASSWORD
+#              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:password}}'
             - Name: COGNITO_APPLICATION_DOMAIN_NAME
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoApplicationDomainName'
@@ -88,6 +88,11 @@ Resources:
             - Name: COGNITO_CLIENT_ID
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
+          Secrets:
+            - Name: DB_USERNAME
+              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:username}}'
+            - Name: DB_PASSWORD
+              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:password}}'
 
   Service:
     Type: AWS::ECS::Service
@@ -180,3 +185,32 @@ Resources:
         'Fn::Sub': '${EnvironmentName}:SetupDatabaseLambda'
       ServiceDBName: !Ref ServiceName
 
+  GiftLifecycleSourceQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-gift-lifecycle
+      RedriveAllowPolicy: denyAll
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
+        maxReceiveCount: 5
+
+  GiftLifecycleDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${EnvironmentName}-gift-lifecycle-dead-letter
+
+  GiftLifecycleSourceQueueSQSPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref GiftLifecycleSourceQueue
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "SQS:SendMessage"
+              - "SQS:ReceiveMessage"
+            Effect: "Allow"
+            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
+            Principal:
+              AWS:
+                - !Ref AWS::AccountId
