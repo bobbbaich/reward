@@ -73,10 +73,10 @@ Resources:
                 'Fn::Sub': '${EnvironmentName}:DBInstancePort'
             - Name: DB_NAME
               Value: !Ref ServiceName
-            #            - Name: DB_USERNAME
-            #              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:username}}'
-            #            - Name: DB_PASSWORD
-            #              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/DBSecret:SecretString:password}}'
+            - Name: DB_USERNAME
+              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:username}}'
+            - Name: DB_PASSWORD
+              Value: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:password}}'
             - Name: COGNITO_APPLICATION_DOMAIN_NAME
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoApplicationDomainName'
@@ -88,24 +88,6 @@ Resources:
             - Name: COGNITO_CLIENT_ID
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
-          Secrets:
-            - Name: DB_USERNAME
-              #              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:username}}'
-              ValueFrom: !Join
-                - ':'
-                - - '{{resolve:secretsmanager'
-                  - !ImportValue
-                    'Fn::Sub': '${EnvironmentName}:RDSSecrets'
-                  - 'SecretString:username}}'
-            - Name: DB_PASSWORD
-              #              ValueFrom: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:password}}'
-              #              ValueFrom: !Sub '{{resolve:secretsmanager:arn:aws:secretsmanager:us-west-2:123456789012:secret:MySecret-a1b2c3:SecretString:password}}'
-              ValueFrom: !Join
-                - ':'
-                - - '{{resolve:secretsmanager'
-                  - !ImportValue
-                    'Fn::Sub': '${EnvironmentName}:RDSSecrets'
-                  - 'SecretString:password}}'
 
   Service:
     Type: AWS::ECS::Service
