@@ -6,7 +6,13 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${random.uuid}
     password: ${random.uuid}
+testcontainers:
+  reuse:
+    enable: true
 logging:
   level:
     com.bobbbaich: DEBUG
-    org.springframework.security: DEBUG
+service:
+  listener:
+    sqs:
+      reward: reward-created

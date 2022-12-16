@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
-class GiftControllerTest extends MvcIntegrationTest {
+class GiftControllerIntTest extends MvcIntegrationTest {
 
     private static final String SCOPE_ROLE_ADMIN = "SCOPE_ROLE_ADMIN";
 

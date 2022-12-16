@@ -1,6 +1,7 @@
 package com.bobbbaich.reward.domain;
 
 
+import com.bobbbaich.reward.listener.entity.GiftListener;
 import com.bobbbaich.reward.validation.GiftNameConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ import static java.util.UUID.randomUUID;
 @Entity
 @DynamicInsert
 @Table(name = "gifts")
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, GiftListener.class})
 public class Gift {
 
     @Id
