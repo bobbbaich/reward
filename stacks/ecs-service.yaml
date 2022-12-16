@@ -185,32 +185,32 @@ Resources:
         'Fn::Sub': '${EnvironmentName}:SetupDatabaseLambda'
       ServiceDBName: !Ref ServiceName
 
-  GiftLifecycleSourceQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${EnvironmentName}-gift-lifecycle
-      RedriveAllowPolicy: denyAll
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
-        maxReceiveCount: 5
-
-  GiftLifecycleDeadLetterQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${EnvironmentName}-gift-lifecycle-dead-letter
-
-  GiftLifecycleSourceQueueSQSPolicy:
-    Type: AWS::SQS::QueuePolicy
-    Properties:
-      Queues:
-        - !Ref GiftLifecycleSourceQueue
-      PolicyDocument:
-        Statement:
-          - Action:
-              - "SQS:SendMessage"
-              - "SQS:ReceiveMessage"
-            Effect: "Allow"
-            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
-            Principal:
-              AWS:
-                - !Ref AWS::AccountId
+#  GiftLifecycleSourceQueue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: !Sub ${EnvironmentName}-gift-lifecycle
+#      RedriveAllowPolicy: denyAll
+#      RedrivePolicy:
+#        deadLetterTargetArn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
+#        maxReceiveCount: 5
+#
+#  GiftLifecycleDeadLetterQueue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: !Sub ${EnvironmentName}-gift-lifecycle-dead-letter
+#
+#  GiftLifecycleSourceQueueSQSPolicy:
+#    Type: AWS::SQS::QueuePolicy
+#    Properties:
+#      Queues:
+#        - !Ref GiftLifecycleSourceQueue
+#      PolicyDocument:
+#        Statement:
+#          - Action:
+#              - "SQS:SendMessage"
+#              - "SQS:ReceiveMessage"
+#            Effect: "Allow"
+#            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
+#            Principal:
+#              AWS:
+#                - !Ref AWS::AccountId
