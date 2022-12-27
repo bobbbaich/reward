@@ -13,7 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.ContainerCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class GiftController {
 
     private final GiftService giftService;
     //remove me
-    private final ContainerCredentialsProvider containerCredentialsProvider;
+    private final AwsCredentialsProvider containerCredentialsProvider;
 
     @PostMapping
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
