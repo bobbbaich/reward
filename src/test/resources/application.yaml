@@ -15,4 +15,4 @@ logging:
 service:
   listener:
     sqs:
-      reward: reward-created
+      reward: gift-lifecycle

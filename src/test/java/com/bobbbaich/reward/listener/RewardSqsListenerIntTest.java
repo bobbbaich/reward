@@ -18,7 +18,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 @ExtendWith({OutputCaptureExtension.class})
 public class RewardSqsListenerIntTest extends SqsIntegrationTest {
 
-    private static final String REWARD_CREATED_QUEUE = "reward-created";
+    private static final String GIFT_LIFECYCLE_QUEUE = "gift-lifecycle";
 
     @Autowired
     private SqsAsyncProducer sqsProducer;
@@ -27,7 +27,7 @@ public class RewardSqsListenerIntTest extends SqsIntegrationTest {
     void testOnRewardCreatedEventConsumed(CapturedOutput output) {
         GiftDTO giftDTO = getGiftDTO();
 
-        sqsProducer.send(REWARD_CREATED_QUEUE, giftDTO);
+        sqsProducer.send(GIFT_LIFECYCLE_QUEUE, giftDTO);
 
         await()
                 .atMost(Duration.ofSeconds(3))

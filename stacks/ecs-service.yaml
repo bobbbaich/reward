@@ -88,6 +88,8 @@ Resources:
             - Name: COGNITO_CLIENT_ID
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
+            - Name: GIFT_LIFECYCLE_QUEUE
+              Value: !GetAtt GiftLifecycleSourceQueue.QueueName
 
   Service:
     Type: AWS::ECS::Service

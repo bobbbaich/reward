@@ -40,4 +40,4 @@ logging:
 service:
   listener:
     sqs:
-      reward: ${REWARD_CREATED_QUEUE:reward-created}
+      reward: ${GIFT_LIFECYCLE_QUEUE:gift-lifecycle}
