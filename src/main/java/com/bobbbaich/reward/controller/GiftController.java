@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.ContainerCredentialsProvider;
 
 import java.util.UUID;
 
@@ -26,6 +28,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class GiftController {
 
     private final GiftService giftService;
+    //remove me
+    private final ContainerCredentialsProvider containerCredentialsProvider;
 
     @PostMapping
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
@@ -37,6 +41,8 @@ public class GiftController {
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Page<GiftDTO> readAll(@PageableDefault(sort = "auditMetadata.createdAt", direction = DESC) Pageable pageable) {
+        AwsCredentials awsCredentials = containerCredentialsProvider.resolveCredentials();
+        log.info("awsCredentials={}", awsCredentials);
         return giftService.readAll(pageable);
     }
 
