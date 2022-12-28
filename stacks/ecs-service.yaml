@@ -45,8 +45,7 @@ Resources:
         - FARGATE
       ExecutionRoleArn: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ECSTaskExecutionRole'
-      TaskRoleArn: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:ECSTaskRole'
+      TaskRoleArn: !GetAtt TaskRole.Arn
       ContainerDefinitions:
         - Name: !Ref ServiceName
           Cpu: !Ref ServiceCPU
@@ -89,7 +88,8 @@ Resources:
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
             - Name: GIFT_LIFECYCLE_QUEUE
-              Value: !GetAtt GiftLifecycleSourceQueue.QueueName
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:GiftLifecycleSourceQueue'
 
   Service:
     Type: AWS::ECS::Service
@@ -182,31 +182,21 @@ Resources:
         'Fn::Sub': '${EnvironmentName}:SetupDatabaseLambda'
       ServiceDBName: !Ref ServiceName
 
-  GiftLifecycleSourceQueue:
-    Type: AWS::SQS::Queue
+  TaskRole:
+    Type: AWS::IAM::Role
     Properties:
-      QueueName: !Sub ${EnvironmentName}-gift-lifecycle
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
-        maxReceiveCount: 5
-
-  GiftLifecycleDeadLetterQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${EnvironmentName}-gift-lifecycle-dead-letter
-#
-#  GiftLifecycleSourceQueueSQSPolicy:
-#    Type: AWS::SQS::QueuePolicy
-#    Properties:
-#      Queues:
-#        - !Ref GiftLifecycleSourceQueue
-#      PolicyDocument:
-#        Statement:
-#          - Action:
-#              - "SQS:SendMessage"
-#              - "SQS:ReceiveMessage"
-#            Effect: "Allow"
-#            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
-#            Principal:
-#              AWS:
-#                - !Ref AWS::AccountId
+      RoleName: ECSTaskRole
+      Description: Allows ECS tasks to call AWS services on your behalf.
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy'
+        - 'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
+        - !ImportValue
+          'Fn::Sub': '${EnvironmentName}:GiftLifecycleSourceQueueManagedPolicyArn'
