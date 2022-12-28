@@ -185,7 +185,7 @@ Resources:
   TaskRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ECSTaskRole
+      RoleName: !Sub ${ServiceName}TaskRole
       Description: Allows ECS tasks to call AWS services on your behalf.
       AssumeRolePolicyDocument:
         Version: 2012-10-17
