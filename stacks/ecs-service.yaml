@@ -89,7 +89,7 @@ Resources:
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
             - Name: GIFT_LIFECYCLE_QUEUE
               Value: !ImportValue
-                'Fn::Sub': '${EnvironmentName}:GiftLifecycleSourceQueue'
+                'Fn::Sub': '${EnvironmentName}:GiftLifecycleSourceQueueName'
 
   Service:
     Type: AWS::ECS::Service
