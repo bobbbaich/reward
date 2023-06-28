@@ -13,6 +13,5 @@ logging:
   level:
     com.bobbbaich: DEBUG
 service:
-  listener:
     sqs:
-      reward: gift-lifecycle
+      gift-lifecycle: gift-lifecycle

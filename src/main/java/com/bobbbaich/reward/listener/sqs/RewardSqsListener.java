@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RewardSqsListener {
 
-    @SqsListener("${service.listener.sqs.reward}")
+    @SqsListener("${service.sqs.gift-lifecycle}")
     public void onRewardCreated(Message<GiftDTO> giftDTO) {
         log.debug("on reward created giftDTO={}", giftDTO);
     }

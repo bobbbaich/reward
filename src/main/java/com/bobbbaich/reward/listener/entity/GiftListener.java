@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GiftListener {
 
-    @Value("${service.listener.sqs.reward}")
-    private String rewardQueue;
+    @Value("${service.sqs.gift-lifecycle}")
+    private String rewardLifecycleQueue;
 
     private SqsProducer sqsProducer;
 
@@ -26,7 +26,7 @@ public class GiftListener {
     @PostRemove
     private void afterAnyUpdate(Gift gift) {
         log.debug("gift insert/update/delete completed uuid={}", gift.getUuid());
-        sqsProducer.send(rewardQueue, gift);
+        sqsProducer.send(rewardLifecycleQueue, gift);
     }
 
     @Autowired
