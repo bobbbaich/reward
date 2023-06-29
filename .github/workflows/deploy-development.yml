@@ -29,6 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          filters: |
+            src:
+              - 'src/**'
       - uses: ./.github/actions/aws-ecr-publish-image
         id: aws-ecr-publish-image
         with:
@@ -51,3 +55,23 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           ecr-image: ${{ env.ECR_IMAGE }}
+
+  deploy-communication:
+    name: Deploy communication
+    environment: development
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - id: deploy-service-communication
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ${{ env.ENVIRONMENT }}-reward-service-communication
+          template: stacks/service-communication.yaml
+          no-fail-on-empty-changeset: "1"
+          capabilities: 'CAPABILITY_IAM, CAPABILITY_NAMED_IAM' # CAPABILITY_AUTO_EXPAND required by lambda, CAPABILITY_IAM - default, CAPABILITY_NAMED_IAM - by task role
+          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"

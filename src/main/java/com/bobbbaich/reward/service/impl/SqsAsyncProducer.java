@@ -21,8 +21,8 @@ public class SqsAsyncProducer implements SqsProducer {
     private final SqsAsyncClient sqsAsyncClient;
     private final ObjectMapper objectMapper;
 
-    public <T> CompletableFuture<Void> send(String queueName, T payload) {
-        return sqsAsyncClient.getQueueUrl(request -> request.queueName(queueName))
+    public <T> void send(String queueName, T payload) {
+        sqsAsyncClient.getQueueUrl(request -> request.queueName(queueName))
                 .thenApply(GetQueueUrlResponse::queueUrl)
                 .thenCompose(queueUrl -> sendToUrl(queueUrl, payload));
     }
@@ -30,12 +30,12 @@ public class SqsAsyncProducer implements SqsProducer {
     private <T> CompletableFuture<Void> sendToUrl(String queueUrl, T payload) {
         return sqsAsyncClient
                 .sendMessage(request -> request
-                        .messageBody(getMessageBodyAsJson(payload))
+                        .messageBody(getPayloadAsJson(payload))
                         .queueUrl(queueUrl))
                 .thenRun(() -> log.debug("sent message queueUrl={} payload={}", queueUrl, payload));
     }
 
-    private <T> String getMessageBodyAsJson(T payload) {
+    private <T> String getPayloadAsJson(T payload) {
         try {
             return objectMapper.writeValueAsString(payload);
         } catch (JsonProcessingException e) {
