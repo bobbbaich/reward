@@ -69,7 +69,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - id: deploy-service-communication
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v1.2.0
         with:
           name: ${{ env.ENVIRONMENT }}-reward-service-communication
           template: stacks/service-communication.yaml
