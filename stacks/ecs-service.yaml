@@ -240,7 +240,11 @@ Resources:
         detail-type:
           - REWARD
       Targets:
-        - !Ref GiftLifecycleSourceQueue
+        - Arn: !Ref GiftLifecycleSourceQueue
+          InputTransformer:
+            InputPathsMap:
+              detail: "$.detail"
+            InputTemplate: '<detail>'
 
 Outputs:
   GiftLifecycleSourceQueueName:
