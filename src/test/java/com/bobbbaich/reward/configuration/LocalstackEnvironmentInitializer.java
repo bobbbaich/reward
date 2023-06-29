@@ -17,6 +17,7 @@ public class LocalstackEnvironmentInitializer implements ApplicationContextIniti
         TestPropertyValues.of(Map.of(
                 "spring.cloud.aws.sqs.endpoint", LOCALSTACK.getEndpointOverride(SQS).toString(),
                 "spring.cloud.aws.region.static", LOCALSTACK.getRegion(),
+                "aws.region", LOCALSTACK.getRegion(),
                 "spring.cloud.aws.credentials.access-key", UUID.randomUUID().toString(),
                 "spring.cloud.aws.credentials.secret-key", UUID.randomUUID().toString()
         )).applyTo(applicationContext);
