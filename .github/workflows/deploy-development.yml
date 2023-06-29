@@ -6,8 +6,7 @@ on:
       - master
 
 env:
-  ENVIRONMENT: development
-  AWS_REGION: us-east-1                      # set this to your preferred AWS region, e.g. us-west-1
+  ENVIRONMENT: development              # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: reward                     # set this to your Amazon ECR repository name
 
 permissions:
@@ -38,6 +37,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
     outputs:
       ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
 
@@ -54,6 +54,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
           ecr-image: ${{ env.ECR_IMAGE }}
 
   deploy-communication:
