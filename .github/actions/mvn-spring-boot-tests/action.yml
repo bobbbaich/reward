@@ -9,5 +9,5 @@ runs:
         distribution: 'zulu'
         java-version: '17'
         cache: 'maven'
-    - run: mvn clean test
+    - run: mvn clean test -DAWS_REGION=${{ secrets.AWS_REGION }}
       shell: bash
