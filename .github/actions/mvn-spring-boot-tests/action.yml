@@ -1,6 +1,11 @@
 name: "Maven Spring Boot Tests"
 description: "Runs spring boot tests using maven"
 
+inputs:
+  aws-region:
+    required: true
+    description: "The aws-region used to authenticate with AWS"
+
 runs:
   using: "composite"
   steps:
@@ -9,5 +14,5 @@ runs:
         distribution: 'zulu'
         java-version: '17'
         cache: 'maven'
-    - run: mvn clean test -DAWS_REGION=${{ secrets.AWS_REGION }}
+    - run: mvn clean test -DAWS_REGION=${{ inputs.aws-region }}
       shell: bash
