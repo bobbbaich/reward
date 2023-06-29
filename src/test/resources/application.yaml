@@ -4,7 +4,7 @@ spring:
   application:
     name: test-reward-service
   datasource:
-    url: jdbc:tc:postgresql:14.2:///${random.uuid}
+    url: jdbc:tc:postgresql:15.3:///${random.uuid}
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${random.uuid}
     password: ${random.uuid}

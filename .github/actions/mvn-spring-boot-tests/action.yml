@@ -14,5 +14,5 @@ runs:
         distribution: 'zulu'
         java-version: '17'
         cache: 'maven'
-    - run: mvn clean test -DAWS_REGION=${{ inputs.aws-region }}
+    - run: mvn clean test
       shell: bash

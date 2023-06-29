@@ -6,8 +6,9 @@ on:
       - master
 
 env:
-  ENVIRONMENT: development              # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: reward                     # set this to your Amazon ECR repository name
+  ENVIRONMENT: development               # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: reward                 # set this to your Amazon ECR repository name
+  AWS_REGION: ${{ secrets.AWS_REGION }}  # set this to your Amazon ECR repository name
 
 permissions:
   contents: read
