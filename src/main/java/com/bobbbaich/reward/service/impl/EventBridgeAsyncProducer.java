@@ -19,7 +19,7 @@ import static java.lang.String.format;
 @Component
 public class EventBridgeAsyncProducer implements EventBridgeProducer {
 
-    @Value("${spring.application.name}")
+    @Value("${service.event-bus.name}")
     private String eventBusName;
 
     @Value("${spring.application.name}")

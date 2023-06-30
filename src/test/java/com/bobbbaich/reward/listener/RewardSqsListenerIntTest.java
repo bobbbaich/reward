@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
@@ -18,7 +19,8 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 @ExtendWith({OutputCaptureExtension.class})
 public class RewardSqsListenerIntTest extends SqsIntegrationTest {
 
-    private static final String GIFT_LIFECYCLE_QUEUE = "gift-lifecycle";
+    @Value("${service.sqs.gift-lifecycle}")
+    private String giftLifecycleQueueName;
 
     @Autowired
     private SqsAsyncProducer sqsProducer;
@@ -27,7 +29,7 @@ public class RewardSqsListenerIntTest extends SqsIntegrationTest {
     void testOnRewardCreatedEventConsumed(CapturedOutput output) {
         GiftDTO giftDTO = getGiftDTO();
 
-        sqsProducer.send(GIFT_LIFECYCLE_QUEUE, giftDTO);
+        sqsProducer.send(giftLifecycleQueueName, giftDTO);
 
         await()
                 .atMost(Duration.ofSeconds(3))

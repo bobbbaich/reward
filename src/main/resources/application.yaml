@@ -35,5 +35,7 @@ logging:
   level:
     com.bobbbaich: DEBUG
 service:
-    sqs:
-      gift-lifecycle: ${GIFT_LIFECYCLE_QUEUE:gift-lifecycle}
+  sqs:
+    gift-lifecycle: ${SERVICE_SQS_GIFT_LIFECYCLE:gift-lifecycle}
+  event-bus:
+    name: ${SERVICE_EVENT_BUS_NAME}

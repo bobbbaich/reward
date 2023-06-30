@@ -87,8 +87,11 @@ Resources:
             - Name: COGNITO_CLIENT_ID
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
-            - Name: GIFT_LIFECYCLE_QUEUE
+            - Name: SERVICE_SQS_GIFT_LIFECYCLE
               Value: !GetAtt GiftLifecycleSourceQueue.QueueName
+            - Name: SERVICE_EVENT_BUS_NAME
+              Value: !ImportValue
+                'Fn::Sub': '${EnvironmentName}:EventBus'
 
   Service:
     Type: AWS::ECS::Service
@@ -227,24 +230,25 @@ Resources:
               - 'sqs:GetQueueAttributes'
             Resource: !GetAtt GiftLifecycleSourceQueue.Arn
 
-  RewardRule:
-    Type: AWS::Events::Rule
-    Properties:
-      Name: !Sub ${EnvironmentName}-reward-rule
-      Description: Reward rule
-      EventBusName: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:EventBus'
-      EventPattern:
-        source:
-          - reward-service
-        detail-type:
-          - REWARD
-      Targets:
-        - Arn: !Ref GiftLifecycleSourceQueue
-          InputTransformer:
-            InputPathsMap:
-              detail: "$.detail"
-            InputTemplate: '<detail>'
+#  RewardRule:
+#    Type: AWS::Events::Rule
+#    Properties:
+#      Name: !Sub ${EnvironmentName}-reward-rule
+#      Description: Reward rule
+#      EventBusName: !ImportValue
+#        'Fn::Sub': '${EnvironmentName}:EventBus'
+#      EventPattern:
+#        source:
+#          - reward-service
+#        detail-type:
+#          - REWARD_LIFECYCLE
+#      Targets:
+#        - Id: !Ref GiftLifecycleSourceQueue
+#          Arn: !GetAtt GiftLifecycleSourceQueue.Arn
+#          InputTransformer:
+#            InputPathsMap:
+#              detail: "$.detail"
+#            InputTemplate: '<detail>'
 
 Outputs:
   GiftLifecycleSourceQueueName:

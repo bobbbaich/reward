@@ -17,3 +17,5 @@ logging:
 service:
   sqs:
     gift-lifecycle: gift-lifecycle
+  event-bus:
+    name: test-event-bus
