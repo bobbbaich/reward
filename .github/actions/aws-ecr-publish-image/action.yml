@@ -50,3 +50,9 @@ runs:
         echo "ecr-image=$ECR_IMAGE_URL" >> $GITHUB_OUTPUT
         echo $GITHUB_OUTPUT
       shell: bash
+
+    - name: test output
+      id: test-output
+      run: |
+        echo "ecr-image=${{ steps.build-image.outputs.ecr-image }}"
+      shell: bash
