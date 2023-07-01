@@ -38,7 +38,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - run: |
-          echo "outputs=${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
+          echo "outputs=${{ steps.aws-ecr-publish-image.outputs.ecr-image }}"
     outputs:
       ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
 
