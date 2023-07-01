@@ -48,6 +48,8 @@ jobs:
     env:
       ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
     steps:
+      - run: |
+          echo "outputs=${{ needs.build-image.outputs.ecr-image }}"
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-deploy
         with:
