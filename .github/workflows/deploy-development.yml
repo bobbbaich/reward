@@ -45,13 +45,15 @@ jobs:
     needs: build-image
     environment: development
     runs-on: ubuntu-latest
-    env:
-      ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
     steps:
-      - run: |
-          echo "outputs=${{ needs.build-image.outputs.ecr-image }}"
+      - env:
+          ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
+        run: |
+          echo "ECR_IMAGE=$ECR_IMAGE"
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/aws-deploy
+      - env:
+          ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
+        uses: ./.github/actions/aws-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
