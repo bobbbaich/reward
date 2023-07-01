@@ -31,10 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          filters: |
-            src:
-              - 'src/**'
       - uses: ./.github/actions/aws-ecr-publish-image
         id: aws-ecr-publish-image
         with:
