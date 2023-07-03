@@ -38,6 +38,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - run: |
+          echo "build-image step results"
+          echo "ecr-image - ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}"
           echo "ecr-image=${{ steps.aws-ecr-publish-image.outputs.ecr-image }}" >> $GITHUB_OUTPUT
 
   deploy:
@@ -49,7 +51,7 @@ jobs:
       - env:
           ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
         run: |
-          echo "ECR_IMAGE=$ECR_IMAGE"
+          echo "ECR_IMAGE - $ECR_IMAGE"
       - uses: actions/checkout@v3
       - env:
           ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
