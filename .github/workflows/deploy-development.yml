@@ -24,32 +24,24 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
 
-  build-image:
-    name: Build and Publish Image
+  build-image-and-deploy:
+    name: Build image and deploy ECS
     needs: run-tests
     environment: development
     runs-on: ubuntu-latest
-    outputs:
-      ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - id: aws-ecr-publish-image
+        name: Build and publish to ECR
         uses: ./.github/actions/aws-ecr-publish-image
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-  deploy:
-    name: Deploy
-    needs: build-image
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/aws-deploy
+      - name: Deploy ECS
+        uses: ./.github/actions/aws-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          ecr-image: ${{ needs.build-image.outputs.ecr-image }}
+          ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
