@@ -47,7 +47,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     outputs:
-      ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
+      ecr-image: ${{ steps.set-ecr-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
@@ -56,7 +56,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - run: |
+      - id: set-ecr-image
+        run: |
           echo "build-image step results"
           echo "ecr-image - ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}"
           echo "ecr-image=${{ steps.aws-ecr-publish-image.outputs.ecr-image }}" >> $GITHUB_OUTPUT
@@ -75,11 +76,9 @@ jobs:
           echo "needs.build-image.outputs.ecr-image - ${{ needs.build-image.outputs.ecr-image }}"
           echo "needs.build-image.outputs - ${{ needs.build-image.outputs }}"
       - uses: actions/checkout@v3
-      - env:
-          ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
-        uses: ./.github/actions/aws-deploy
+      - uses: ./.github/actions/aws-deploy
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          ecr-image: ${{ env.ECR_IMAGE }}
+          ecr-image: ${{ needs.build-image.outputs.ecr-image }}
