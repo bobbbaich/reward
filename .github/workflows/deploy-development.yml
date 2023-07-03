@@ -29,6 +29,8 @@ jobs:
     needs: run-tests
     environment: development
     runs-on: ubuntu-latest
+    outputs:
+      ecr-image: ${{ steps.aws-ecr-publish-image.outputs.ecr-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/aws-ecr-publish-image
