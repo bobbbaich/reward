@@ -52,6 +52,8 @@ jobs:
           ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
         run: |
           echo "ECR_IMAGE - $ECR_IMAGE"
+          echo "needs.build-image.outputs.ecr-image - ${{ needs.build-image.outputs.ecr-image }}"
+          echo "needs.build-image.outputs - ${{ needs.build-image.outputs }}"
       - uses: actions/checkout@v3
       - env:
           ECR_IMAGE: ${{ needs.build-image.outputs.ecr-image }}
