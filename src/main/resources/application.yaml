@@ -35,6 +35,7 @@ logging:
   level:
     com.bobbbaich: DEBUG
     io.awspring.cloud.sqs: DEBUG
+    software.amazon.awssdk.services.sqs: DEBUG
 service:
   sqs:
     gift-lifecycle: ${SERVICE_SQS_GIFT_LIFECYCLE:gift-lifecycle}
