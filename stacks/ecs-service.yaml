@@ -88,7 +88,7 @@ Resources:
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:CognitoClientId'
             - Name: SERVICE_SQS_GIFT_LIFECYCLE
-              Value: !GetAtt GiftLifecycleSourceQueue.QueueName
+              Value: !Ref GiftLifecycleSourceQueue
             - Name: SERVICE_EVENT_BUS_NAME
               Value: !ImportValue
                 'Fn::Sub': '${EnvironmentName}:EventBus'
