@@ -239,9 +239,10 @@ Resources:
             Principal:
               Service: events.amazonaws.com
             Action: SQS:SendMessage
-            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
+            Resource: *
       Queues:
-        - Ref: GiftLifecycleSourceQueue
+        - !Ref GiftLifecycleSourceQueue
+        - !Ref GiftLifecycleDeadLetterQueue
 
   RewardEventBridgeRule:
     Type: AWS::Events::Rule
