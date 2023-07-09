@@ -243,7 +243,9 @@ Resources:
         detail-type:
           - REWARD_LIFECYCLE
       Targets:
-        - Id: !Ref GiftLifecycleSourceQueue
+        - Id: !Sub
+            - ${QueueName}-target
+            - QueueName: !GetAtt GiftLifecycleSourceQueue.QueueName
           Arn: !GetAtt GiftLifecycleSourceQueue.Arn
           InputTransformer:
             InputPathsMap:
