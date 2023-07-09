@@ -247,6 +247,8 @@ Resources:
             - ${QueueName}-target
             - QueueName: !GetAtt GiftLifecycleSourceQueue.QueueName
           Arn: !GetAtt GiftLifecycleSourceQueue.Arn
+          DeadLetterConfig:
+            Arn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
           InputTransformer:
             InputPathsMap:
               detail: "$.detail"
