@@ -230,6 +230,19 @@ Resources:
               - 'sqs:GetQueueAttributes'
             Resource: !GetAtt GiftLifecycleSourceQueue.Arn
 
+  EventBridgeToSqsPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: SQS:SendMessage
+            Resource: !GetAtt GiftLifecycleSourceQueue.Arn
+      Queues:
+        - Ref: GiftLifecycleSourceQueue
+
   RewardEventBridgeRule:
     Type: AWS::Events::Rule
     Properties:
