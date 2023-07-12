@@ -263,10 +263,7 @@ Resources:
           Arn: !GetAtt GiftLifecycleSourceQueue.Arn
           DeadLetterConfig:
             Arn: !GetAtt GiftLifecycleDeadLetterQueue.Arn
-          InputTransformer:
-            InputPathsMap:
-              detail: "$.detail"
-            InputTemplate: '<detail>'
+          InputPath: "$.detail"
 
 Outputs:
   GiftLifecycleSourceQueueName:
